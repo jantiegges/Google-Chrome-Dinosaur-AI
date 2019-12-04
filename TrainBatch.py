@@ -1,0 +1,4 @@
+"""
+TrainBatch(batch_array)
+
+"""
