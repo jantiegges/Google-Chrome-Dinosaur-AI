@@ -5,3 +5,4 @@ Dino(action)
     restarts the game if dead
     return reward depending on dead or not
 """
+
