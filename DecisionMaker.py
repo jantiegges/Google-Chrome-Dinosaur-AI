@@ -28,3 +28,11 @@ def get_image():
     img_block = gray_img.resize((IMG_COL, IMG_ROW))
     arr = np.array(img_block)
     return arr
+
+def takeDecision(model, array):
+    """
+    return the prediction as a 3x1 vector with each value for going, jumping or ducking
+    :parameter: model used, 16x4x4 array with the screen pixels values.
+    :return: float 3x1 vector
+    """
+    return model.predict(array)
