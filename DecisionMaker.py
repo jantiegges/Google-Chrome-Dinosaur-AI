@@ -10,7 +10,7 @@ DecisionMaker
     store image_array and neq q_value in batch_array
 """
 
-from PIL import ImageGrab, ImageOps
+from PIL import ImageGrab, ImageOps, Image
 import numpy as np
 IMG_COL = 22    # number of columns of the input image
 IMG_ROW = 3     # number of rows of the input image
@@ -25,7 +25,7 @@ def get_image():
     """
     image = ImageGrab.grab(playing_area)
     gray_img = ImageOps.grayscale(image)
-    img_block = gray_img.resize((IMG_COL, IMG_ROW))
+    img_block = gray_img.resize((IMG_COL, IMG_ROW), Image.LANCZOS)
     arr = np.array(img_block)
     return arr
 
