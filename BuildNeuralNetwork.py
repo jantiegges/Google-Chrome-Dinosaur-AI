@@ -14,6 +14,7 @@ IMG_COL = 16
 IMG_ROW = 4
 IMG_FLOW = 4
 
+
 def createNewSeqModel():
     """
     create the neural network model (input layer, 2x hidden dense layer with 64 neurones each and output layer)
@@ -21,7 +22,7 @@ def createNewSeqModel():
     """
     model = Sequential()
     weights = 'random_uniform'
-    model.add(Layers.Flatten(input_shape=(IMG_COL,IMG_ROW,IMG_FLOW)))
+    model.add(Layers.Flatten(input_shape=(IMG_FLOW, IMG_ROW, IMG_COL)))
     model.add(Layers.Dense(64, activation='relu', kernel_initializer=weights))
     model.add(Layers.Dense(64, activation='relu', kernel_initializer=weights))
     model.add(Layers.Dense(3, activation='linear', kernel_initializer=weights))

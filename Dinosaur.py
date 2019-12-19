@@ -14,7 +14,15 @@ def jump():
     Jump over the obstacle
     :return: None
     """
-    pyautogui.press('up')
+    pyautogui.keyDown('up')
+
+
+def unJump():
+    """
+    Stop pressing the jump key
+    :return: None
+    """
+    pyautogui.keyUp('up')
 
 
 def duck():
@@ -25,7 +33,7 @@ def duck():
     pyautogui.keyDown('down')
 
 
-def unduck():
+def unDuck():
     """
     Get the dino up
     :return: None
@@ -33,7 +41,16 @@ def unduck():
     pyautogui.keyUp('down')
 
 
-def check_state(arr) :
+def restart():
+    """
+    restart the game when the dino is dead
+    :return: None
+    """
+    restart_coords = (490, 465)
+    pyautogui.click(restart_coords)
+
+
+def checkState(arr):
     """
     Check if the dino is still running
     :parameter: arr, the 16x4 array of the last image

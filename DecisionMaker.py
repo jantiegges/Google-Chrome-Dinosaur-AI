@@ -12,13 +12,14 @@ DecisionMaker
 
 from PIL import ImageGrab, ImageOps, Image
 import numpy as np
-IMG_COL = 22    # number of columns of the input image
-IMG_ROW = 3     # number of rows of the input image
+
+IMG_COL = 16    # number of columns of the input image
+IMG_ROW = 4     # number of rows of the input image
 
 playing_area = (190, 420, 850, 510)
 
 
-def get_image():
+def getImage():
     """
     Checks the area to have obstacles
     :return: np array of the image
@@ -28,6 +29,7 @@ def get_image():
     img_block = gray_img.resize((IMG_COL, IMG_ROW), Image.LANCZOS)
     arr = np.array(img_block)
     return arr
+
 
 def takeDecision(model, array):
     """
