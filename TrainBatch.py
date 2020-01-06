@@ -4,15 +4,19 @@ TrainBatch(batch_array)
 """
 
 SAMPLES = 1000
-GAMMA = 0.9
+GAMMA = 0.8
 ALPHA = LR = 0.7
 EPSILON_I = 0.1
 EPSILON_F = 0.0001
-DECAY_STEP = (EPSILON_I-EPSILON_F)/1000
+DECAY_TIME = 800                 # Number of generation epsilon will take to reach epsilon_f
+DECAY_STEP = (EPSILON_I-EPSILON_F)/DECAY_TIME
+
+IMAGE_COL = 16
+IMAGE_ROW = 4
+IMAGE_FLOW = 4
 
 
 import numpy as np
-from keras.models import load_model
 import Dinosaur
 import DecisionMaker
 
@@ -58,7 +62,7 @@ def propagateReward(resultArray, decisionTaken, reward, step):
 def trainModel(model, generation):
     """
     Script that runs the game and train the model
-    :parameter: the model we use, generation = number of time the model trained a batch
+    :parameter: the model we use, generation = number of time the model trained a batch, if new model generation = 0
     :return: None
     """
 
@@ -66,17 +70,17 @@ def trainModel(model, generation):
     if epsilon < EPSILON_F:
         epsilon = EPSILON_F
 
-
     while True:
 
         generation += 1
         s = 0  # number of samples
-        imageFlow = np.full((4, 4, 16), 247)  # array of 4 images used to take decision (position 0 most recent image)
-        decision = np.zeros((1,3))  # array holding the result of the decision
+        imageFlow = np.full((IMAGE_FLOW, IMAGE_ROW, IMAGE_COL), 247)  # array of 4 images used to take decision (position 0 most recent image)
+        decision = np.zeros((1,2))  # array holding the result of the decision
         action = 0  # action taken by the dinosaur
         decisionTaken = np.zeros(1)  # decision Taken at each step
-        stateArray = np.zeros((1, 4, 4, 16))  # Array storing the image state by state
-        resultArray = np.zeros((1, 3))  # Array storing the decision state by state
+        stateArray = np.zeros((1, IMAGE_FLOW, IMAGE_ROW, IMAGE_COL))  # Array storing the image state by state
+        resultArray = np.zeros((1, 2))  # Array storing the decision state by state
+
 
         while s < SAMPLES:
             step = 0  # Number of steps before dying
@@ -96,7 +100,7 @@ def trainModel(model, generation):
                 decision = DecisionMaker.takeDecision(model, np.array([imageFlow]))
 
                 if np.random.random() <= epsilon:           # random chance of taking a random action
-                    action = np.random.randint(0,3)
+                    action = np.random.randint(0,2)
                 else:
                     action = np.argmax(decision[0])         # 0 = keep running, 1 = jump, 2 = duck
 
@@ -109,16 +113,13 @@ def trainModel(model, generation):
                     reward = 10
                 elif action == 1:
                     Dinosaur.jump()
-                    reward = 3
-                elif action == 2:
-                    Dinosaur.duck()
-                    reward = 3
+                    reward = 2
 
                 current_arr = DecisionMaker.getImage()          # get new image
                 alive = Dinosaur.checkState(current_arr)        # check if still alive
 
                 if alive == False:
-                    reward = -50
+                    reward = -100
 
                 decision[0][action] += LR*reward                # gives current reward
 
@@ -136,8 +137,6 @@ def trainModel(model, generation):
 
                 if action == 1:                                                 # stops the action
                     Dinosaur.unJump()
-                elif action == 2:
-                    Dinosaur.unDuck()
 
                 s += 1
 
@@ -148,5 +147,8 @@ def trainModel(model, generation):
 
         print("generation %d model trained" % generation)
 
-        if generation%5 == 0:                                           # saves one model every 5 generations
+        if generation%10 == 0:                                           # saves one model every 5 generations
             model.save("model_generation_%d.h5" % generation)
+
+        Dinosaur.resetWebPage()
+

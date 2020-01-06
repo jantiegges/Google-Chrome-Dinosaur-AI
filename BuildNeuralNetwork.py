@@ -25,6 +25,6 @@ def createNewSeqModel():
     model.add(Layers.Flatten(input_shape=(IMG_FLOW, IMG_ROW, IMG_COL)))
     model.add(Layers.Dense(64, activation='relu', kernel_initializer=weights))
     model.add(Layers.Dense(64, activation='relu', kernel_initializer=weights))
-    model.add(Layers.Dense(3, activation='linear', kernel_initializer=weights))
+    model.add(Layers.Dense(2, activation='linear', kernel_initializer=weights))
     model.compile(Optimizers.adam(), loss='mse')
     return model

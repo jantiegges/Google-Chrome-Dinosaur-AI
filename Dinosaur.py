@@ -7,6 +7,7 @@ Dino(action)
 """
 
 import pyautogui
+import time
 
 
 def jump():
@@ -60,3 +61,16 @@ def checkState(arr):
     if arr[1][7] < 200 and arr[2][7] < 200:
         alive = False
     return alive
+
+
+def resetWebPage():
+    """
+    Refreshes the webpage
+    :return: None
+    """
+    refresh_button_coords = (110, 75)
+    pyautogui.click(refresh_button_coords)
+    time.sleep(10)
+    pyautogui.keyDown('up')
+    pyautogui.keyUp('up')
+    time.sleep(10)
